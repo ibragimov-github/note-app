@@ -1,9 +1,10 @@
 import React from 'react'
+import Button from '@mui/material/Button';
 
 function Loginpage() {
   return (
     <div>
-      <h1>Login</h1>
+      Login
     </div>
   )
 }
