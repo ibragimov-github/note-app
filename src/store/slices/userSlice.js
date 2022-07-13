@@ -1,9 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  email: null,
-  token: null,
-  id: null,
+  email: localStorage.user ? JSON.parse(localStorage.user).email : 
+  sessionStorage.user ? JSON.parse(sessionStorage.user).email : null,
+  token: localStorage.user ? JSON.parse(localStorage.user).token : 
+  sessionStorage.user ? JSON.parse(sessionStorage.user).token : null,
+  id: localStorage.user ? JSON.parse(localStorage.user).id : 
+  sessionStorage.user ? JSON.parse(sessionStorage.user).id : null,
 }
 
 const userSlice = createSlice({
