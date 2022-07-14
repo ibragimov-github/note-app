@@ -1,9 +1,9 @@
 import React from 'react'
 import { Drawer, Box, List, ListItem, ListItemText, ListItemIcon } from '@mui/material'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch } from 'react-redux';
 import { removeUser } from 'store/slices/userSlice';
+import Dialog from '../Dialog/DialogMUI';
 
 function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
   const dispatch = useDispatch();
@@ -30,6 +30,7 @@ function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
               setIsDrawerOpen(false)
               dispatch(removeUser())
               localStorage.removeItem('user')
+              sessionStorage.removeItem('user')
             }}
             >
               <ListItemIcon>
@@ -37,20 +38,10 @@ function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
               </ListItemIcon>
               <ListItemText primary='Log out'/>
             </ListItem>
-            <ListItem sx={{'&:hover':{
-              backgroundColor: localStorage.getItem('mode') === 'dark'? '#616161':'#e0e0e0',
-              transition: '0.3s',
-              cursor: 'pointer'
-            }}}>
-              <ListItemIcon>
-                <DeleteIcon/>
-              </ListItemIcon>
-              <ListItemText primary='Delete account'/>
-            </ListItem>
+            <Dialog setIsDrawerOpen={setIsDrawerOpen}/>
           </List>
         </nav>
       </Box>
-
     </Drawer>
   )
 }
