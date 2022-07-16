@@ -3,7 +3,8 @@ import { Drawer, Box, List, ListItem, ListItemText, ListItemIcon } from '@mui/ma
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useDispatch } from 'react-redux';
 import { removeUser } from 'store/slices/userSlice';
-import Dialog from '../Dialog/DialogMUI';
+import Dialog from '../DialogMUI/DialogMUI';
+import { getAuth, signOut } from "firebase/auth";
 
 function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
   const dispatch = useDispatch();
@@ -27,10 +28,13 @@ function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
               cursor: 'pointer'
             }}}
             onClick={() => {
-              setIsDrawerOpen(false)
-              dispatch(removeUser())
-              localStorage.removeItem('user')
-              sessionStorage.removeItem('user')
+              const auth = getAuth();
+              signOut(auth).then(()=> {
+                setIsDrawerOpen(false)
+                dispatch(removeUser())
+                localStorage.removeItem('user')
+                sessionStorage.removeItem('user')
+              })
             }}
             >
               <ListItemIcon>

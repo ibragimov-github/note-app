@@ -11,6 +11,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import CustomizedSnackbars from 'components/SnackError/SnackError';
 import { useDispatch } from 'react-redux';
 import { setUser } from 'store/slices/userSlice';
+import { useAuth } from 'hooks/use-auth';
 
 
 function Loginpage() {
@@ -21,6 +22,11 @@ function Loginpage() {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {isAuth} = useAuth();
+  useEffect(() => {
+    if(isAuth) {navigate('/')}
+  })
   function changeCheckbox() {setChecked(!checked);}
   const onSubmit = (e) => {
     e.preventDefault();

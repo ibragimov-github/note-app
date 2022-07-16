@@ -11,6 +11,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import { setUser } from 'store/slices/userSlice';
 import CustomizedSnackbars from 'components/SnackError/SnackError';
+import { useAuth } from 'hooks/use-auth';
 
 
 function Registerpage() {
@@ -20,6 +21,11 @@ function Registerpage() {
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {isAuth} = useAuth();
+  useEffect(() => {
+    if(isAuth) {navigate('/')}
+  })
   const onSubmit = (e) => {
     e.preventDefault();
     if (password.length >=6 && password.length === password.replace(/\s/g, '').length) {

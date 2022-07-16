@@ -15,7 +15,6 @@ function DialogMUI({setIsDrawerOpen}) {
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const deleteUserAction = () => {
-    console.log(true)
     deleteUser(user).then(()=>{
       handleClose()
       setIsDrawerOpen(false)

@@ -19,6 +19,7 @@ function Password({password, setPassword, passwordError}) {
         value={password}
         color='warning'
         onChange={(e) => setPassword(e.target.value)}
+        autoComplete='on'
         endAdornment={
           <InputAdornment position='end'>
             <IconButton

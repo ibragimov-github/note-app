@@ -8,13 +8,26 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Header from '../Header/Header';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useSelector } from 'react-redux';
-
-
+import { useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useDispatch } from 'react-redux';
+import { removeUser } from 'store/slices/userSlice';
 
 
 
 function App() {
-  const theme = useSelector(state => state.darkTheme.dark)
+  const theme = useSelector(state => state.darkTheme.dark);
+  const dispatch = useDispatch();
+  useEffect(()=> {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if(!user) {
+        dispatch(removeUser())
+        localStorage.removeItem('user')
+        sessionStorage.removeItem('user')
+      }
+    })
+  })
   const darkMode = createTheme({
     palette: {
       mode: theme,
