@@ -6,8 +6,9 @@ import styles from './Homepage.module.scss';
 import { Button, Card, CardActions, CardContent, Dialog, Fab, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
-import DoneIcon from '@mui/icons-material/Done';
-import {CircularProgress} from '@mui/material';
+import SaveButton from 'components/SaveButton/SaveButton';
+import { getDatabase, ref, onValue} from "firebase/database";
+import { getAuth } from 'firebase/auth';
 
 
 const style = {
@@ -17,13 +18,31 @@ const style = {
 };
 function Homepage() {
   const [bkg, setBkg] = useState(false)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
+  let notes = []
+  const [checkButton, setCheckButton] = useState(false)
   const navigate = useNavigate();
   const {isAuth} = useAuth();
+  const db = getDatabase();
+  const auth = getAuth();
+  const user = auth.currentUser;
+  if(user) {
+    const noteList = ref(db, 'users/' + user.uid + '/database')
+    onValue(noteList, (snapshot) => {
+      if(snapshot.exists()) {
+        notes.push(...snapshot.val())
+        console.log(notes[0].content)
+      }
+    })
+  }
+
   useEffect(() => {
     if(!isAuth) {navigate('/login')}
   })
   return (
     <div className={styles.container}>
+      {notes.map(el => <p>{el.content}</p>)}
       <Dialog
         open={bkg}
         onClose={()=>setBkg(false)}
@@ -38,8 +57,12 @@ function Homepage() {
               autoComplete='off'
               variant="standard"
               color='warning'
+              value={title}
+              onChange={(e)=> setTitle(e.target.value)}
               />
               <TextField
+                value={content}
+                onChange={(e)=> setContent(e.target.value)}
                 id="outlined-multiline-static"
                 fullWidth
                 label="Text..."
@@ -62,11 +85,15 @@ function Homepage() {
               variant='outlined'
               color='error'
             >cancel</Button>
-            <Button 
-              endIcon={0?<CircularProgress color='inherit' size={20}/>:<DoneIcon/>}
-              color='success'
-              variant='contained'
-            >save</Button>
+            <SaveButton 
+            title={title} 
+            setTitle={setTitle}
+            content={content}
+            setContent={setContent}
+            setCheckButton={setCheckButton}
+            checkButton={checkButton}
+            setBkg={setBkg}
+            />
           </CardActions>
         </Card>
       </Dialog>

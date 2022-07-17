@@ -3,25 +3,25 @@ import { ListItem, ListItemText, ListItemIcon, Dialog,
 DialogContent, DialogActions, Button, 
 DialogContentText, DialogTitle } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getAuth, deleteUser } from "firebase/auth";
+import { getAuth, deleteUser, signOut } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import { removeUser } from 'store/slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function DialogMUI({setIsDrawerOpen}) {
   const dispatch = useDispatch();
+  const nav = useNavigate();
   const [open, setOpen] = useState(false);
-  const auth = getAuth();
-  const user = auth.currentUser;
   const handleClickOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const deleteUserAction = () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
     deleteUser(user).then(()=>{
-      handleClose()
+      dispatch(removeUser)
       setIsDrawerOpen(false)
-      dispatch(removeUser())
-      localStorage.removeItem('user')
-      sessionStorage.removeItem('user')
-    }).catch(console.error)
+      nav('/login')
+    })
   }
   return (
     <>

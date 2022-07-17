@@ -18,6 +18,7 @@ function Loginpage() {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [checked, setChecked] = useState(false);
+  const [button, setButton] = useState(false);
   const [passwordError, setPasswordError] = useState(false)
   const [open, setOpen] = useState(false);
   const nav = useNavigate();
@@ -29,12 +30,14 @@ function Loginpage() {
   })
   function changeCheckbox() {setChecked(!checked);}
   const onSubmit = (e) => {
+    setButton(true)
     e.preventDefault();
     if (password.length >=6 && password.length === password.replace(/\s/g, '').length) {
       setPasswordError(false)
       const auth = getAuth();
       signInWithEmailAndPassword(auth, login, password)
         .then(({user}) => {
+          setButton(false)
           dispatch(setUser({
             email: user.email,
             id: user.uid,
@@ -53,7 +56,10 @@ function Loginpage() {
             token: user.accessToken,
           }))
         })
-        .catch(() => setOpen(true))
+        .catch(() => {
+          setOpen(true)
+          setButton(false)
+        })
       setLogin('');
       setPassword('');
     }
@@ -87,7 +93,7 @@ function Loginpage() {
               />} 
             label="Remember me" 
           />
-          <SubbmitButton text='Login'/>
+          <SubbmitButton state={button} text='Login'/>
           <Button 
             onClick={()=> nav('/registration')}
             color='success' 

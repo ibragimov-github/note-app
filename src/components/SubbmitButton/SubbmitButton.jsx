@@ -1,13 +1,13 @@
 import React from 'react';
 import LoginIcon from '@mui/icons-material/Login';
-import { Button } from '@mui/material';
-function SubbmitButton({disabled, text}) {
+import { Button, CircularProgress } from '@mui/material';
+function SubbmitButton({state, text}) {
   return (
     <Button 
-      disabled={disabled}
+      disabled={state}
       type='subbmit'
       variant="contained" 
-      endIcon={<LoginIcon />}
+      endIcon={state?<CircularProgress color='inherit' size={20}/>:<LoginIcon />}
       color='warning'
     >
       {text}

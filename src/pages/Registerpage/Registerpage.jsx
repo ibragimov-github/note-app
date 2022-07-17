@@ -12,10 +12,12 @@ import { useDispatch } from 'react-redux';
 import { setUser } from 'store/slices/userSlice';
 import CustomizedSnackbars from 'components/SnackError/SnackError';
 import { useAuth } from 'hooks/use-auth';
+import { getDatabase, ref, set } from "firebase/database";
 
 
 function Registerpage() {
   const [login, setLogin] = useState('');
+  const [button, setButton] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false)
   const [open, setOpen] = useState(false);
@@ -29,10 +31,11 @@ function Registerpage() {
   const onSubmit = (e) => {
     e.preventDefault();
     if (password.length >=6 && password.length === password.replace(/\s/g, '').length) {
-      setPasswordError(false)
       const auth = getAuth();
+      setButton(true)
       createUserWithEmailAndPassword(auth, login, password)
         .then(({user}) => {
+          setButton(false)
           dispatch(setUser(
           {
             email: user.email,
@@ -44,9 +47,16 @@ function Registerpage() {
             id: user.uid,
             token: user.accessToken,
           }))
+          const db = getDatabase();
+          set(ref(db, 'users/' + user.uid), {
+            email: user.email,
+          });
           nav('/')
         })
-        .catch(() => setOpen(true))
+        .catch(() => {
+          setOpen(true)
+          setButton(false)
+        })
       setLogin('');
       setPassword('');
     }
@@ -74,7 +84,7 @@ function Registerpage() {
             password={password} 
             setPassword={setPassword}
           />
-          <SubbmitButton text='Registration'/>
+          <SubbmitButton state={button} text='Registration'/>
           <Button 
             onClick={()=> nav('/login')}
             color='success' 
