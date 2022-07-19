@@ -7,6 +7,7 @@ import { getAuth, deleteUser, signOut } from "firebase/auth";
 import { useDispatch } from 'react-redux';
 import { removeUser } from 'store/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { getDatabase, set, ref } from 'firebase/database';
 
 function DialogMUI({setIsDrawerOpen}) {
   const dispatch = useDispatch();
@@ -17,11 +18,20 @@ function DialogMUI({setIsDrawerOpen}) {
   const deleteUserAction = () => {
     const auth = getAuth();
     const user = auth.currentUser;
-    deleteUser(user).then(()=>{
-      dispatch(removeUser)
-      setIsDrawerOpen(false)
-      nav('/login')
-    })
+    const db = getDatabase();
+    set(ref(db, 'users/' + user.uid), null).then(
+      deleteUser(user).then(()=>{
+        dispatch(removeUser)
+        setIsDrawerOpen(false)
+        nav('/login')
+      })
+    ).catch(
+      deleteUser(user).then(()=>{
+        dispatch(removeUser)
+        setIsDrawerOpen(false)
+        nav('/login')
+      })
+    )
   }
   return (
     <>

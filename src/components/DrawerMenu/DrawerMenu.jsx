@@ -5,9 +5,11 @@ import { useDispatch } from 'react-redux';
 import { removeUser } from 'store/slices/userSlice';
 import Dialog from '../DialogMUI/DialogMUI';
 import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 
 function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
   const dispatch = useDispatch();
+  const nav = useNavigate();
   return (
     <Drawer
       anchor='left'
@@ -34,6 +36,7 @@ function DrawerMenu({isDrawerOpen, setIsDrawerOpen}) {
                 dispatch(removeUser())
                 localStorage.removeItem('user')
                 sessionStorage.removeItem('user')
+                nav('/login')
               })
             }}
             >

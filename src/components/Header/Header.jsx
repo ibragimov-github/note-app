@@ -25,7 +25,10 @@ function Header() {
           variant="h6" 
           component="span" 
           color={localStorage.getItem('mode') === 'dark'? 'black':'#fff'}
-          sx={{ flexGrow: 1}}
+          sx={{ 
+            flexGrow: 1,
+            userSelect: 'none'
+          }}
         >
           NOTES
         </Typography>
